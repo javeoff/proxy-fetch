@@ -13,8 +13,12 @@ async function loadProxies() {
 loadProxies()
 
 const getProxy = () => {
-  idx = (idx + 1) % proxies.length
-  return proxies[idx]
+  if (idx >= proxies.length) {
+    idx = 0;
+  }
+  const p = proxies[idx]
+  idx += 1;
+  return p;
 }
 
 const createProxyFetch = (timeout = 5000) => {
@@ -44,6 +48,4 @@ const createProxyFetch = (timeout = 5000) => {
   return p
 }
 
-const proxyFetch = createProxyFetch()
-
-export default proxyFetch;
+export default createProxyFetch();
