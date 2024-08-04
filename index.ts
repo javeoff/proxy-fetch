@@ -18,12 +18,16 @@ const getProxy = () => {
 }
 
 const createProxyFetch = (timeout = 5000) => {
-  const p: typeof fetch = async (url: URL | RequestInfo, options?: any): Promise<any> => {
+  const p = async (url: URL | RequestInfo, options?: any, repeat = 0): Promise<any> => {
     const controller = new AbortController();
     const proxy = getProxy()
 
+    if (!proxy && repeat > 3) {
+      throw new Error('proxy fetch failed');
+    }
     if (!proxy) {
-      return p(url, options)
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      return p(url, options, repeat + 1);
     }
 
     const t = setTimeout(() => controller.abort(), timeout)
@@ -40,4 +44,6 @@ const createProxyFetch = (timeout = 5000) => {
   return p
 }
 
-export const proxyFetch = createProxyFetch()
+const proxyFetch = createProxyFetch()
+
+export default proxyFetch;
