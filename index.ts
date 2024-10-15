@@ -21,7 +21,11 @@ export class ProxyFetch {
 			})
 	}
 
-	public async loadProxies(options?: Record<string, any>) {
+	public async loadProxies(options?: Record<string, any>, force = false) {
+		if (!force && this.proxies?.length) {
+			return;
+		}
+
 		this.proxies = await this.fetchProxies(options);
 	}
 
@@ -55,4 +59,8 @@ export class ProxyFetch {
 	}
 }
 
-export const proxyFetch = new ProxyFetch().fetch;
+const proxyFetchInstance = new ProxyFetch([]);
+
+export const loadProxies = proxyFetchInstance.loadProxies;
+
+export const proxyFetch = proxyFetchInstance.fetch;
