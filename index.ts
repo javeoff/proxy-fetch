@@ -29,7 +29,7 @@ export class ProxyFetch {
 		this.proxies = await this.fetchProxies(options);
 	}
 
-	public async fetch(url: string, options?: Record<string, any>): Promise<any> {
+	public async fetch(url: RequestInfo | URL, options?: Record<string, any>): Promise<any> {
 		const proxy = this.getProxy()
 
 		if (!proxy) {
