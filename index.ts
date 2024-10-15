@@ -11,7 +11,14 @@ export class ProxyFetch {
 	public async fetchProxies(options?: Record<string, any>): Promise<string[]> {
 		return fetch(process.env.PROXIES_URL!, options)
 			.then((p) => p.text())
-			.then((r) => r.split('\n'))
+			.then((r) => {
+				const proxies = r.split('\n')
+				if (!proxies.every((p) => p.includes('.'))) {
+					throw new Error('ProxyFetch failed: Invalid proxy format');
+				}
+
+				return proxies;
+			})
 	}
 
 	public async loadProxies(options?: Record<string, any>) {
