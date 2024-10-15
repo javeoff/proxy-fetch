@@ -1,6 +1,6 @@
 {
   "name": "@javeoff/proxy-fetch",
-  "version": "1.0.4",
+  "version": "1.0.15",
   "description": "",
   "type": "module",
   "main": "index.js",
