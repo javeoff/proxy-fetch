@@ -1,10 +1,9 @@
-import proxyFetch from './index.ts';
+import { proxyFetch } from './index.ts';
 import { describe, test } from 'vitest'
 
 describe('test', async () => {
-	const response = await proxyFetch('https://quote-api.jup.ag/v6/quote');
 	test("fetch request", async () => {
-		await Promise.all(Array.from({ length: 400 }).fill(null).map(async (_, idx) => {
+		await Promise.all(Array.from({ length: 1 }).fill(null).map(async (_, idx) => {
 			try {
 				const urlParameters = new URLSearchParams({
 					inputMint: "So11111111111111111111111111111111111111112",

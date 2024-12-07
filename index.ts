@@ -50,14 +50,14 @@ export class ProxyFetch {
 	public async fetch(url: RequestInfo | URL, options?: Record<string, any>): Promise<any> {
 		const proxy = this.getProxy()
 
-		if (!proxy || !!this.URL) {
+		if (!proxy && !!this.URL) {
 			throw new Error('ProxyFetch failed: Proxy not found');
 		}
 
 		return (_fetch as any)(url, {
 			...options,
 			proxy: proxy ? 'http://' + proxy : undefined,
-			agent: new HttpsProxyAgent('http://' + proxy),
+			agent: proxy? new HttpsProxyAgent('http://' + proxy) : undefined,
 		})
 	}
 
