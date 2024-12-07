@@ -2,6 +2,8 @@ import { HttpsProxyAgent } from "https-proxy-agent"
 import _fetch from 'node-fetch';
 
 export class ProxyFetch {
+	public URL: string = process.env.PROXIES_URL!;
+
 	public constructor(private proxies?: string[]) {
 		if (!proxies) {
 			this.loadProxies();
@@ -9,7 +11,7 @@ export class ProxyFetch {
 	}
 
 	public async fetchProxies(options?: Record<string, any>): Promise<string[]> {
-		return fetch(process.env.PROXIES_URL!, options)
+		return fetch(this.URL, options)
 			.then(async (p) => {
 				if (!p.ok) {
 					const text = await p.text()
@@ -48,13 +50,13 @@ export class ProxyFetch {
 	public async fetch(url: RequestInfo | URL, options?: Record<string, any>): Promise<any> {
 		const proxy = this.getProxy()
 
-		if (!proxy) {
+		if (!proxy || !!this.URL) {
 			throw new Error('ProxyFetch failed: Proxy not found');
 		}
 
 		return (_fetch as any)(url, {
 			...options,
-			proxy,
+			proxy: proxy ? 'http://' + proxy : undefined,
 			agent: new HttpsProxyAgent('http://' + proxy),
 		})
 	}
@@ -62,6 +64,9 @@ export class ProxyFetch {
 	private proxyIdx = 0;
 
 	public getProxy() {
+		if (!this.URL) {
+			return;
+		}
 		if (!this.proxies) {
 			throw new Error('Proxies does not loaded yet');
 		}
